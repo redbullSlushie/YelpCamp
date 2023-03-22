@@ -49,8 +49,10 @@ const secret = process.env.SECRET || 'thisisasecret';
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
-    secret,
-    touchAfter: 24 * 60 * 60
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret
+    }
 });
 
 store.on('error', function (e) {
@@ -138,12 +140,6 @@ app.use((req, res, next) => {
 app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
-
-/* app.get('/fakeUser', async (req, res) => {
-    const user = new User({ email: 'email@gmail.com', username: 'Lolllaa' });
-    const newUser = await User.register(user, 'monkey');
-    res.send(newUser);
-}) */
 
 app.get('/', (req, res) => {
     res.render('home')
